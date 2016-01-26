@@ -1,0 +1,18 @@
+{
+    "name": "tpumap",
+    "version": "1.0.0",
+    "main": "./css/main.css",
+    "ignore": [
+        ".jshintrc",
+        "**/*.txt"
+    ],
+    "license": "MIT",
+    "dependencies": {
+        "jquery":"~2.1.0",
+        "leaflet":"~0.7.7",
+        "leaflet-routing-machine":"~*",
+        "bootstrap":"~3.*"
+    },
+    "devDependencies": {
+    }
+}
