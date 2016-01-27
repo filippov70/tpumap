@@ -13,7 +13,9 @@ $(document).ready(function () {
         'weight': 1.5
     };
 
-    var enters = new L.geoJson();
+    var enters = new L.geoJson(null, {onEachFeature: function (feat, lyr) {
+        lyr.bindPopup(feat.properties.Название);
+    }});
 
     var tpuBuildings = new L.geoJson(null, buildingsStyle);
 
@@ -34,7 +36,7 @@ $(document).ready(function () {
         success: function (data) {
             $(data.features).each(function (key, data) {
                 enters.addData(data);
-                console.log(data, key);
+                //console.log(data, key);
             });
         }
     }).error(function () {});
@@ -52,8 +54,9 @@ $(document).ready(function () {
 
     var map = new L.Map('map', {
         layers: [
-            osm,
-            yandex
+            osm
+            //,
+            //yandex
         ]
     });
 
@@ -71,6 +74,6 @@ $(document).ready(function () {
 //        "Cities": cities
 //    };
 
-    L.control.layers(baseMaps).addTo(map);
+    L.control.layers(baseMaps, {'Строения':tpuBuildings}).addTo(map);
 
 });
