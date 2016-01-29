@@ -14,10 +14,19 @@ $(document).ready(function () {
     };
 
     var enters = new L.geoJson(null, {onEachFeature: function (feat, lyr) {
-        lyr.bindPopup(feat.properties.Название);
-    }});
+            // вдруг нужно
+            lyr.bindPopup(feat.properties.Название);
+        }});
 
-    var tpuBuildings = new L.geoJson(null, buildingsStyle);
+    var tpuBuildings = new L.geoJson(null,
+            {style: buildingsStyle,
+                onEachFeature: function (feat, lyr) {
+                    lyr.on('click', function (evt) {
+                        // TODO вызов поэтажных планов по id
+                       console.log(feat.properties);
+                    });
+                }
+            });
 
     $.ajax({
         dataType: "json",
@@ -45,18 +54,18 @@ $(document).ready(function () {
             'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
             {
                 attribution: 'Map data © <a href="http://openstreetmap.org">OpenStreetMap</a> contributors',
-                opacity: 0.7,
+                //opacity: 0.7,
                 visible: true
             }
     );
-    
+
     var yandex = new L.Yandex('hybrid', {visible: false});
 
     var map = new L.Map('map', {
         layers: [
             osm
-            //,
-            //yandex
+                    //,
+                    //yandex
         ]
     });
 
@@ -64,7 +73,10 @@ $(document).ready(function () {
     enters.addTo(map);
 
     map.setView([56.46, 84.95], 15);
-
+//    var fg = L.featureGroup(tpuBuildings);
+//    fg.on('click', function (event) {
+//        console.log(event);
+//    }).addTo(map);
     var baseMaps = {
         "подложка OSM": osm,
         "подложка Yandex": yandex
@@ -74,6 +86,6 @@ $(document).ready(function () {
 //        "Cities": cities
 //    };
 
-    L.control.layers(baseMaps, {'Строения':tpuBuildings}).addTo(map);
+    L.control.layers(baseMaps, {'Строения': tpuBuildings}).addTo(map);
 
 });
