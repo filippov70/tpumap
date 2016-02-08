@@ -31,6 +31,8 @@ $(document).ready(function () {
         'weight': 1.5
     };
 
+    var entersArray = [];
+
     var enters = new L.geoJson(null, {onEachFeature: function (feat, lyr) {
             // вдруг нужно
             lyr.bindPopup(feat.properties.Название);
@@ -63,7 +65,6 @@ $(document).ready(function () {
         success: function (data) {
             $(data.features).each(function (key, data) {
                 enters.addData(data);
-                //console.log(data, key);
             });
         }
     }).error(function () {});
@@ -87,8 +88,19 @@ $(document).ready(function () {
         ]
     });
 
-    tpuBuildings.addTo(map);
+    //tpuBuildings.addTo(map);
+    
     enters.addTo(map);
+    $.getJSON("data/enterstpu.geojson", function (json) {
+         $.each(json.features, function (index, value) {
+            var text = value.properties.Название;
+            entersArray.push(value);
+            $('#sel1').append(('<option value="'+index+'">'+text+'</options'));
+            $('#sel2').append(('<option value="'+index+'">'+text+'</options'));
+            $('#sel2 :last').attr("selected", "selected");
+        });
+
+    });
 
     map.setView([56.46, 84.95], 15);
 //    var fg = L.featureGroup(tpuBuildings);
@@ -105,32 +117,32 @@ $(document).ready(function () {
 //    };
 
     L.control.layers(baseMaps, {'Строения': tpuBuildings}).addTo(map);
-    
+
     // геолокация
-    
+
     L.control.locate({
         position: 'topleft',
-        layer: new L.LayerGroup(), 
-        drawCircle: false, 
-        follow: false, 
-        setView: true, 
-        keepCurrentZoomLevel: true, 
-        stopFollowingOnDrag: false, 
-        remainActive: false, 
+        layer: new L.LayerGroup(),
+        drawCircle: false,
+        follow: false,
+        setView: true,
+        keepCurrentZoomLevel: true,
+        stopFollowingOnDrag: false,
+        remainActive: false,
         markerClass: L.circleMarker, // L.circleMarker or L.marker
-        circleStyle: {}, 
+        circleStyle: {},
         markerStyle: {},
-        followCircleStyle: {}, 
+        followCircleStyle: {},
         followMarkerStyle: {},
-        icon: 'fa fa-map-marker', 
-        iconLoading: 'fa fa-spinner fa-spin', 
+        icon: 'fa fa-map-marker',
+        iconLoading: 'fa fa-spinner fa-spin',
         iconElementTag: 'span', // tag for the icon element, span or i
-        circlePadding: [0, 0], 
-        metric: true, 
+        circlePadding: [0, 0],
+        metric: true,
         onLocationError: function (err) {
             alert(err.message);
-        }, 
-        onLocationOutsideMapBounds: function (context) { 
+        },
+        onLocationOutsideMapBounds: function (context) {
             alert(context.options.strings.outsideMapBoundsMsg);
         },
         showPopup: true,
@@ -145,53 +157,39 @@ $(document).ready(function () {
     }).addTo(map);
 
     // Прокладка маршрутов
-//    var rcontrol = new L.Routing.control({
-//        waypoints: [
-//            L.latLng(56.465427, 84.950363),
-//            L.latLng(56.462500, 84.957147)
-//        ],
-//        routeWhileDragging: true
-//    }).addTo(map);
-    
+
     var routeControl = L.control({position: 'topleft'});
-    
-    routeControl.onAdd = function(map) {
+    var from, to;
+
+    routeControl.onAdd = function (map) {
         var div = L.DomUtil.create('div', 'leaflet-control-locate leaflet-bar leaflet-control');
         var link = L.DomUtil.create('a', 'leaflet-bar-part leaflet-bar-part-single', div);
         link.title = 'Как пройти';
         var icon = L.DomUtil.create('span', 'fa fa-arrow-circle-o-up', link);
-        link.onclick = function() {
-          $('#myModal').modal('toggle');
-          //console.log('click');
+        link.onclick = function () {
+            $('#myModal').modal('toggle');
+            from = null;
+            to = null;
         };
         return div;
     };
     routeControl.addTo(map);
-//    function createButton(label, container) {
-//        var btn = L.DomUtil.create('button', 'button', container);
-//        btn.setAttribute('type', 'button');
-//        btn.innerHTML = label;
-//        return btn;
-//    };
+    var rcontrol;
+    $('#route').click(function (){
+        from = $('#sel1').val();
+        to = $('#sel2').val();
+        fromCoord = entersArray[from].geometry.coordinates;
+        toCoord = entersArray[to].geometry.coordinates;
+        if (rcontrol){
+            rcontrol.removeFrom(map);
+        }
+        rcontrol = new L.Routing.control({
+            waypoints: [
+                L.latLng(fromCoord[1], fromCoord[0]),
+                L.latLng(toCoord[1], toCoord[0])
+            ],
+            routeWhileDragging: true
+        }).addTo(map);
+    });
 
-//    
-//    var startBtn, destBtn;
-//    map.on('click', function (e) {
-//        var container = L.DomUtil.create('div'),
-//                startBtn = createButton('Укажите откуда', container),
-//                destBtn = createButton('Укажите куда', container);
-//
-//        L.popup()
-//                .setContent(container)
-//                .setLatLng(e.latlng)
-//                .openOn(map);
-//    });
-//    L.DomEvent.on(startBtn, 'click', function () {
-//        rcontrol.spliceWaypoints(0, 1, e.latlng);
-//        map.closePopup();
-//    });
-//    L.DomEvent.on(destBtn, 'click', function () {
-//        rcontrol.spliceWaypoints(rcontrol.getWaypoints().length - 1, 1, e.latlng);
-//        map.closePopup();
-//    });
 });
