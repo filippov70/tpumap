@@ -41,7 +41,7 @@ $(document).ready(function () {
                 onEachFeature: function (feat, lyr) {
                     lyr.on('click', function (evt) {
                         // TODO вызов поэтажных планов по id
-                       console.log(feat.properties);
+                        console.log(feat.properties);
                     });
                 }
             });
@@ -105,5 +105,93 @@ $(document).ready(function () {
 //    };
 
     L.control.layers(baseMaps, {'Строения': tpuBuildings}).addTo(map);
+    
+    // геолокация
+    
+    L.control.locate({
+        position: 'topleft',
+        layer: new L.LayerGroup(), 
+        drawCircle: false, 
+        follow: false, 
+        setView: true, 
+        keepCurrentZoomLevel: true, 
+        stopFollowingOnDrag: false, 
+        remainActive: false, 
+        markerClass: L.circleMarker, // L.circleMarker or L.marker
+        circleStyle: {}, 
+        markerStyle: {},
+        followCircleStyle: {}, 
+        followMarkerStyle: {},
+        icon: 'fa fa-map-marker', 
+        iconLoading: 'fa fa-spinner fa-spin', 
+        iconElementTag: 'span', // tag for the icon element, span or i
+        circlePadding: [0, 0], 
+        metric: true, 
+        onLocationError: function (err) {
+            alert(err.message);
+        }, 
+        onLocationOutsideMapBounds: function (context) { 
+            alert(context.options.strings.outsideMapBoundsMsg);
+        },
+        showPopup: true,
+        strings: {
+            title: "Где я?", // title of the locate control
+            metersUnit: "метр", // string for metric units
+            feetUnit: "feet", // string for imperial units
+            popup: "Вы находитесь внутри окружности радиусом {distance} {unit} от этой точки", // text to appear if user clicks on circle
+            outsideMapBoundsMsg: "You seem located outside the boundaries of the map" // default message for onLocationOutsideMapBounds
+        },
+        locateOptions: {}  // define location options e.g enableHighAccuracy: true or maxZoom: 10
+    }).addTo(map);
 
+    // Прокладка маршрутов
+//    var rcontrol = new L.Routing.control({
+//        waypoints: [
+//            L.latLng(56.465427, 84.950363),
+//            L.latLng(56.462500, 84.957147)
+//        ],
+//        routeWhileDragging: true
+//    }).addTo(map);
+    
+    var routeControl = L.control({position: 'topleft'});
+    
+    routeControl.onAdd = function(map) {
+        var div = L.DomUtil.create('div', 'leaflet-control-locate leaflet-bar leaflet-control');
+        var link = L.DomUtil.create('a', 'leaflet-bar-part leaflet-bar-part-single', div);
+        link.title = 'Как пройти';
+        var icon = L.DomUtil.create('span', 'fa fa-arrow-circle-o-up', link);
+        link.onclick = function() {
+          $('#myModal').modal('toggle');
+          //console.log('click');
+        };
+        return div;
+    };
+    routeControl.addTo(map);
+//    function createButton(label, container) {
+//        var btn = L.DomUtil.create('button', 'button', container);
+//        btn.setAttribute('type', 'button');
+//        btn.innerHTML = label;
+//        return btn;
+//    };
+
+//    
+//    var startBtn, destBtn;
+//    map.on('click', function (e) {
+//        var container = L.DomUtil.create('div'),
+//                startBtn = createButton('Укажите откуда', container),
+//                destBtn = createButton('Укажите куда', container);
+//
+//        L.popup()
+//                .setContent(container)
+//                .setLatLng(e.latlng)
+//                .openOn(map);
+//    });
+//    L.DomEvent.on(startBtn, 'click', function () {
+//        rcontrol.spliceWaypoints(0, 1, e.latlng);
+//        map.closePopup();
+//    });
+//    L.DomEvent.on(destBtn, 'click', function () {
+//        rcontrol.spliceWaypoints(rcontrol.getWaypoints().length - 1, 1, e.latlng);
+//        map.closePopup();
+//    });
 });
