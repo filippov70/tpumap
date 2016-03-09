@@ -1,7 +1,7 @@
 /* 
  * The MIT License
  *
- * Copyright 2014 filippov.
+ * Copyright 2016 filippov.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -88,7 +88,7 @@ $(document).ready(function () {
         ]
     });
 
-    //tpuBuildings.addTo(map);
+    tpuBuildings.addTo(map);
     
     enters.addTo(map);
     $.getJSON("data/enterstpu.geojson", function (json) {
@@ -124,7 +124,7 @@ $(document).ready(function () {
         position: 'topleft',
         layer: new L.LayerGroup(),
         drawCircle: false,
-        follow: false,
+        follow: true,
         setView: true,
         keepCurrentZoomLevel: true,
         stopFollowingOnDrag: false,
