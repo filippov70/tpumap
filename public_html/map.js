@@ -164,7 +164,7 @@ $(document).ready(function () {
     routeControl.onAdd = function (map) {
         var div = L.DomUtil.create('div', 'leaflet-control-locate leaflet-bar leaflet-control');
         var link = L.DomUtil.create('a', 'leaflet-bar-part leaflet-bar-part-single', div);
-        link.title = 'Как пройти';
+        link.title = 'Как проехать';
         var icon = L.DomUtil.create('span', 'fa fa-arrow-circle-o-up', link);
         link.onclick = function () {
             $('#myModal').modal('toggle');
