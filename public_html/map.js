@@ -47,7 +47,9 @@ $(document).ready(function () {
         'radius': '0',
         'opacity': '0'
     };
-
+    
+    var locale = ['ru', 'en', 'cn'];
+    
     var tpuHostels = new L.geoJson(null,
             {style: hostelsStyle,
                 onEachFeature: function (feat, lyr) {
@@ -256,7 +258,13 @@ $(document).ready(function () {
                 L.latLng(fromCoord[1], fromCoord[0]),
                 L.latLng(toCoord[1], toCoord[0])
             ],
-            routeWhileDragging: true
+            routeWhileDragging: true,
+            formatter: new L.Routing.Formatter({
+                language: locale[0], // 'en'
+                units: 'metric'
+            }),
+            collapsible: true
+            //showAlternatives: true
         }).addTo(map);
     });
 
