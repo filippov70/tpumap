@@ -115,11 +115,11 @@ $(document).ready(function () {
 
     var entersArray = [];
 
-//    var enters = new L.geoJson(null, {style: entersStyle,
-//        onEachFeature: function (feat, lyr) {
-//            // вдруг нужно будет
-//            //lyr.bindPopup(feat.properties.Назва);
-//        }});
+    var enters = new L.geoJson(null, {style: entersStyle,
+        onEachFeature: function (feat, lyr) {
+            // вдруг нужно будет
+            //lyr.bindPopup(feat.properties.Назва);
+        }});
 
     $.ajax({
         dataType: "json",
@@ -139,14 +139,17 @@ $(document).ready(function () {
                 visible: true
             }
     );
-
-    var yandex = new L.Yandex('hybrid', {visible: false});
-
+    
+    // Possible types: map, satellite, hybrid, publicMap, publicMapHybrid
+    var yandex = new L.Yandex('map', {visible: false});
+    // Possible types: SATELLITE, ROADMAP, HYBRID, TERRAIN
+    var ggl = new L.Google('ROADMAP');
+    
     var map = new L.Map('map', {
         layers: [
             osm
-                    //,
-                    //yandex
+            //,
+            //yandex
         ]
     });
 
@@ -173,7 +176,8 @@ $(document).ready(function () {
 //    }).addTo(map);
     var baseMaps = {
         "подложка OSM": osm,
-        "подложка Yandex": yandex
+        "подложка Yandex": yandex,
+        "подложка Google": ggl
     };
 
 //    var overlayMaps = {
