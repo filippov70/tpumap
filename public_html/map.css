@@ -1,7 +1,7 @@
 /*
 The MIT License
 
-Copyright 2016 Filippov Vladislav.
+Copyright 2018 Filippov Vladislav.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -22,9 +22,14 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 /* 
-    Created on : 05.02.2016, 15:56:53
+    Created on : 05.02.2018, 15:56:53
     Author     : Filippov Vladislav
 */
+
+body {
+    padding: 0;
+    margin: 0;
+}
 
 .mapbox {
     position: relative;
@@ -32,8 +37,8 @@ THE SOFTWARE.
 
 .mapbox .overlay {
     position: absolute;
-    top: 20px;
-    left: 0;
+    top: 0px;
+    left: 0px;
     pointer-events: none;
 }
 

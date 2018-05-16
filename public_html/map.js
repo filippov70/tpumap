@@ -47,9 +47,9 @@ $(document).ready(function () {
         'radius': '0',
         'opacity': '0'
     };
-    
+
     var locale = ['ru', 'en', 'cn'];
-    
+
     var tpuHostels = new L.geoJson(null,
             {style: hostelsStyle,
                 onEachFeature: function (feat, lyr) {
@@ -131,145 +131,76 @@ $(document).ready(function () {
         }
     }).error(function () {});
 
-    var osm = new L.TileLayer(
-            'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-            {
-                attribution: 'Map data © <a href="http://openstreetmap.org">OpenStreetMap</a> contributors',
-                //opacity: 0.7,
-                visible: true
-            }
-    );
+
+    var basestations = L.layerGroup();
     
-    // Possible types: map, satellite, hybrid, publicMap, publicMapHybrid
-    var yandex = new L.Yandex('map', {visible: false});
-    // Possible types: SATELLITE, ROADMAP, HYBRID, TERRAIN
-    var ggl = new L.Google('ROADMAP');
+    var myIcon = L.icon({
+        iconUrl: 'http://109.202.24.24/zrp/bs.png',
+        iconSize: [32, 32],
+        iconAnchor: [16, 32],
+        popupAnchor: [1, -36],
+    });
+    L.marker([54.721331, 20.495379], {icon: myIcon}).bindPopup('БС').addTo(basestations);
+
+    var zrp = L.tileLayer('http://109.202.24.24/ZRPBS/{z}/{x}/{y}.png', {
+		maxZoom: 13 }).addTo(basestations);
+
     
+
+    var osm = L.tileLayer('http://a.tile.opentopomap.org/{z}/{x}/{y}.png', {maxZoom: 13}),
+            falkosm = L.tileLayer('http://ec2.cdn.ecmaps.de/WmsGateway.ashx.jpg?TileX={x}&TileY={y}&ZoomLevel={z}&Experience=falk&MapStyle=Falk%20OSM', {maxZoom: 13}),
+            esrisat = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}.jpg', {maxZoom: 13}),
+            esritopo = L.tileLayer('https://services.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}.jpg', {maxZoom: 13});
+
+    var overlays = {
+        "Зона радиопокрытия": zrp,
+        "БС": basestations
+
+    };
+
     var map = new L.Map('map', {
         layers: [
-            osm
-            //,
-            //yandex
+            osm,
+            falkosm,
+            esrisat,
+            esritopo
+                    //,
+                    //yandex
         ]
     });
 
-    tpuEducations.addTo(map);
-    tpuHostels.addTo(map);
-    tpuInfrastructure.addTo(map);
+//    tpuEducations.addTo(map);
+//    tpuHostels.addTo(map);
+//    tpuInfrastructure.addTo(map);
     //enters.addTo(map);
 
-    $.getJSON("data/enterstpu.geojson", function (json) {
-        $.each(json.features, function (index, value) {
-            var text = value.properties.Назва;
-            entersArray.push(value);
-            $('#sel1').append(('<option value="' + index + '">' + text + '</options'));
-            $('#sel2').append(('<option value="' + index + '">' + text + '</options'));
-            $('#sel2 :last').attr("selected", "selected");
-        });
+//    $.getJSON("data/enterstpu.geojson", function (json) {
+//        $.each(json.features, function (index, value) {
+//            var text = value.properties.Назва;
+//            entersArray.push(value);
+//            $('#sel1').append(('<option value="' + index + '">' + text + '</options'));
+//            $('#sel2').append(('<option value="' + index + '">' + text + '</options'));
+//            $('#sel2 :last').attr("selected", "selected");
+//        });
+//
+//    });
 
-    });
-
-    map.setView([56.46, 84.95], 15);
+    map.setView([54.721331, 20.495379], 13);
 //    var fg = L.featureGroup(tpuBuildings);
 //    fg.on('click', function (event) {
 //        console.log(event);
 //    }).addTo(map);
     var baseMaps = {
-        "подложка OSM": osm,
-        "подложка Yandex": yandex,
-        "подложка Google": ggl
+        "OpenTopoMap": osm,
+        "Falk OSM": falkosm,
+        "ESRI Sat": esrisat,
+        "ESRI Topo": esritopo
     };
 
-//    var overlayMaps = {
-//        "Cities": cities
-//    };
 
     L.control.layers(baseMaps,
-            {
-                'Учебные': tpuEducations,
-                'Общежития': tpuHostels,
-                'Соц.объекты': tpuInfrastructure
-            }
+            overlays
     ).addTo(map);
 
-    // геолокация
-
-    L.control.locate({
-        position: 'topleft',
-        layer: new L.LayerGroup(),
-        drawCircle: false,
-        follow: true,
-        setView: true,
-        keepCurrentZoomLevel: true,
-        stopFollowingOnDrag: false,
-        remainActive: false,
-        markerClass: L.circleMarker, // L.circleMarker or L.marker
-        circleStyle: {},
-        markerStyle: {},
-        followCircleStyle: {},
-        followMarkerStyle: {},
-        icon: 'fa fa-map-marker',
-        iconLoading: 'fa fa-spinner fa-spin',
-        iconElementTag: 'span', // tag for the icon element, span or i
-        circlePadding: [0, 0],
-        metric: true,
-        onLocationError: function (err) {
-            alert(err.message);
-        },
-        onLocationOutsideMapBounds: function (context) {
-            alert(context.options.strings.outsideMapBoundsMsg);
-        },
-        showPopup: true,
-        strings: {
-            title: "Где я?", // title of the locate control
-            metersUnit: "метр", // string for metric units
-            feetUnit: "feet", // string for imperial units
-            popup: "Вы находитесь внутри окружности радиусом {distance} {unit} от этой точки", // text to appear if user clicks on circle
-            outsideMapBoundsMsg: "You seem located outside the boundaries of the map" // default message for onLocationOutsideMapBounds
-        },
-        locateOptions: {}  // define location options e.g enableHighAccuracy: true or maxZoom: 10
-    }).addTo(map);
-
-    // Прокладка маршрутов
-
-    var routeControl = L.control({position: 'topleft'});
-    var from, to;
-
-    routeControl.onAdd = function (map) {
-        var div = L.DomUtil.create('div', 'leaflet-control-locate leaflet-bar leaflet-control');
-        var link = L.DomUtil.create('a', 'leaflet-bar-part leaflet-bar-part-single', div);
-        link.title = 'Как проехать';
-        var icon = L.DomUtil.create('span', 'fa fa-arrow-circle-o-up', link);
-        link.onclick = function () {
-            $('#myModal').modal('toggle');
-            from = null;
-            to = null;
-        };
-        return div;
-    };
-    routeControl.addTo(map);
-    var rcontrol;
-    $('#route').click(function () {
-        from = $('#sel1').val();
-        to = $('#sel2').val();
-        fromCoord = entersArray[from].geometry.coordinates;
-        toCoord = entersArray[to].geometry.coordinates;
-        if (rcontrol) {
-            rcontrol.removeFrom(map);
-        }
-        rcontrol = new L.Routing.control({
-            waypoints: [
-                L.latLng(fromCoord[1], fromCoord[0]),
-                L.latLng(toCoord[1], toCoord[0])
-            ],
-            routeWhileDragging: true,
-            formatter: new L.Routing.Formatter({
-                language: locale[0], // 'en'
-                units: 'metric'
-            }),
-            collapsible: true
-            //showAlternatives: true
-        }).addTo(map);
-    });
-
+    L.control.scale({ position: 'bottomleft', imperial:false, maxWidth:200}).addTo(map);
 });
