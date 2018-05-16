@@ -24,114 +24,6 @@
 
 $(document).ready(function () {
 
-    var educationsStyle = {
-        'color': 'black',
-        'fillOpacity': 0.6,
-        'fillColor': '#4dc436',
-        'weight': 1.5
-    };
-    var infrastructureStyle = {
-        'color': 'black',
-        'fillOpacity': 0.6,
-        'fillColor': '#f07400',
-        'weight': 1.5
-    };
-    var hostelsStyle = {
-        'color': 'black',
-        'fillOpacity': 0.6,
-        'fillColor': '#1e45f6',
-        'weight': 1.5
-    };
-
-    var entersStyle = {
-        'radius': '0',
-        'opacity': '0'
-    };
-
-    var locale = ['ru', 'en', 'cn'];
-
-    var tpuHostels = new L.geoJson(null,
-            {style: hostelsStyle,
-                onEachFeature: function (feat, lyr) {
-                    lyr.on('click', function (evt) {
-                        // TODO вызов поэтажных планов по id
-                        console.log(feat.properties);
-                    });
-                }
-            });
-
-    $.ajax({
-        dataType: "json",
-        url: "data/hostels.geojson",
-        success: function (data) {
-            $(data.features).each(function (key, data) {
-                tpuHostels.addData(data);
-
-            });
-        }
-    }).error(function () {});
-
-    var tpuInfrastructure = new L.geoJson(null,
-            {style: infrastructureStyle,
-                onEachFeature: function (feat, lyr) {
-                    lyr.on('click', function (evt) {
-                        // TODO вызов поэтажных планов по id
-                        console.log(feat.properties);
-                    });
-                }
-            });
-
-    $.ajax({
-        dataType: "json",
-        url: "data/infrastructure.geojson",
-        success: function (data) {
-            $(data.features).each(function (key, data) {
-                tpuInfrastructure.addData(data);
-
-            });
-        }
-    }).error(function () {});
-
-    var tpuEducations = new L.geoJson(null,
-            {style: educationsStyle,
-                onEachFeature: function (feat, lyr) {
-                    lyr.on('click', function (evt) {
-                        // TODO вызов поэтажных планов по id
-                        console.log(feat.properties);
-                    });
-                }
-            });
-
-    $.ajax({
-        dataType: "json",
-        url: "data/educations.geojson",
-        success: function (data) {
-            $(data.features).each(function (key, data) {
-                tpuEducations.addData(data);
-
-            });
-        }
-    }).error(function () {});
-
-    var entersArray = [];
-
-    var enters = new L.geoJson(null, {style: entersStyle,
-        onEachFeature: function (feat, lyr) {
-            // вдруг нужно будет
-            //lyr.bindPopup(feat.properties.Назва);
-        }});
-
-    $.ajax({
-        dataType: "json",
-        url: "data/enterstpu.geojson",
-        success: function (data) {
-            $(data.features).each(function (key, data) {
-                enters.addData(data);
-            });
-        }
-    }).error(function () {});
-
-
     var basestations = L.layerGroup();
     
     var myIcon = L.icon({
@@ -169,27 +61,9 @@ $(document).ready(function () {
         ]
     });
 
-//    tpuEducations.addTo(map);
-//    tpuHostels.addTo(map);
-//    tpuInfrastructure.addTo(map);
-    //enters.addTo(map);
-
-//    $.getJSON("data/enterstpu.geojson", function (json) {
-//        $.each(json.features, function (index, value) {
-//            var text = value.properties.Назва;
-//            entersArray.push(value);
-//            $('#sel1').append(('<option value="' + index + '">' + text + '</options'));
-//            $('#sel2').append(('<option value="' + index + '">' + text + '</options'));
-//            $('#sel2 :last').attr("selected", "selected");
-//        });
-//
-//    });
 
     map.setView([54.721331, 20.495379], 13);
-//    var fg = L.featureGroup(tpuBuildings);
-//    fg.on('click', function (event) {
-//        console.log(event);
-//    }).addTo(map);
+
     var baseMaps = {
         "OpenTopoMap": osm,
         "Falk OSM": falkosm,
@@ -203,4 +77,6 @@ $(document).ready(function () {
     ).addTo(map);
 
     L.control.scale({ position: 'bottomleft', imperial:false, maxWidth:200}).addTo(map);
+    
+    L.control.mouseCoordinate().addTo(map);
 });

@@ -45,3 +45,32 @@ body {
 .mapbox .overlay .btn {
     pointer-events: initial;
 }
+
+.leaflet-control-zoom-display {
+    background-color: #fff;
+    border-bottom: 2px solid #ccc;
+    width: 30px;
+    height: 28px;
+    line-height: 32px;
+    display: block;
+    text-align: center;
+    text-decoration: none;
+    color: black;
+    padding-top: 0.5em;
+    font: bold 14px/20px Tahoma, Verdana, sans-serif;
+}
+
+.leaflet-control-mouseCoordinate{
+    width:250px;
+    min-height:30px;
+    text-align:left;
+    border-radius:5px;
+    box-shadow:0 1px 5px rgba(0,0,0,.6);
+    background: #ffffff repeat scroll 0 0 #fff;
+    color:#333;padding:6px 10px 6px 6px}
+.leaflet-control-mouseCoordinate table{
+    width:100%
+}
+.coords{
+    width:90px
+}

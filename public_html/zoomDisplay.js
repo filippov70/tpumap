@@ -1,9 +1,7 @@
-<!DOCTYPE html>
-<!--
 /* 
  * The MIT License
  *
- * Copyright 2016 filippov.
+ * Copyright 2018 filippov.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,24 +21,46 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
--->
-<html>
-    <head>
-        <title>карта кампуса ТПУ</title>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-        <link href="bower_components/leaflet/dist/leaflet.css" rel="stylesheet" type="text/css"/>
-        <link href="map.css" rel="stylesheet" type="text/css"/>
 
-        <script src="bower_components/leaflet/dist/leaflet.js" type="text/javascript"></script>
-        <script src="bower_components/jquery/dist/jquery.min.js" type="text/javascript"></script>
-        <script src="zoomDisplay.js" type="text/javascript"></script>
-        <script src="mousePos.js" type="text/javascript"></script>
-        <script src="map.js" type="text/javascript"></script>
-    </head>
-    <body>
-        <div id="map" style="width: 100%; height: 100%; position: absolute">
-        </div>
-    </body>
-</html>
+L.Control.ZoomDisplay = L.Control.extend({
+    options: {
+        position: 'topleft'
+    },
+
+    onAdd: function (map) {
+        this._map = map;
+        this._container = L.DomUtil.create('div', 'leaflet-control-zoom-display leaflet-bar-part leaflet-bar');
+        this.updateMapZoom(map.getZoom());
+        map.on('zoomend', this.onMapZoomEnd, this);
+        return this._container;
+    },
+
+    onRemove: function (map) {
+        map.off('zoomend', this.onMapZoomEnd, this);
+    },
+
+    onMapZoomEnd: function (e) {
+        this.updateMapZoom(this._map.getZoom());
+    },
+
+    updateMapZoom: function (zoom) {
+        if(typeof(zoom) === "undefined"){zoom = ""}
+        this._container.innerHTML = zoom;
+    }
+});
+
+L.Map.mergeOptions({
+    zoomDisplayControl: true
+});
+
+L.Map.addInitHook(function () {
+    if (this.options.zoomDisplayControl) {
+        this.zoomDisplayControl = new L.Control.ZoomDisplay();
+        this.addControl(this.zoomDisplayControl);
+    }
+});
+
+L.control.zoomDisplay = function (options) {
+    return new L.Control.ZoomDisplay(options);
+};
