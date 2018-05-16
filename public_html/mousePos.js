@@ -51,10 +51,10 @@ L.Control.mouseCoordinate  = L.Control.extend({
             //Round for display only
             var dLat = Math.round(lat * 100000) / 100000;
             var dLng = Math.round(lng * 100000) / 100000;
-            content += "<tr><td>GPS</td><td>" + dLat + "</td><td> " + dLng +"</td></tr>";
+            content += "<tr><td></td><td>" + dLat + "</td><td> " + dLng +"</td></tr>";
             if(this.options.gpsLong){
-                var gpsMinuten = this._geo2geodeziminuten(gps);
-                content += "<tr><td></td><td class='coords'>"+ gpsMinuten.NS + " " + gpsMinuten.latgrad + "&deg; "+ gpsMinuten.latminuten+"</td><td class='coords'> " + gpsMinuten.WE + " "+ gpsMinuten.lnggrad +"&deg; "+ gpsMinuten.lngminuten +"</td></tr>";
+                //var gpsMinuten = this._geo2geodeziminuten(gps);
+                //content += "<tr><td></td><td class='coords'>"+ gpsMinuten.NS + " " + gpsMinuten.latgrad + "&deg; "+ gpsMinuten.latminuten+"</td><td class='coords'> " + gpsMinuten.WE + " "+ gpsMinuten.lnggrad +"&deg; "+ gpsMinuten.lngminuten +"</td></tr>";
                 var gpsMinutenSekunden = this._geo2gradminutensekunden(gps);
                 content += "<tr><td></td><td>"+ gpsMinutenSekunden.NS + " " + gpsMinutenSekunden.latgrad + "&deg; "+ gpsMinutenSekunden.latminuten + "&prime; "+ gpsMinutenSekunden.latsekunden+"&Prime;</td><td> " + gpsMinutenSekunden.WE + " "+ gpsMinutenSekunden.lnggrad +"&deg; "+ gpsMinutenSekunden.lngminuten + "&prime; "+ gpsMinutenSekunden.lngsekunden+"&Prime;</td></tr>";
             }
