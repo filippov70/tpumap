@@ -74,3 +74,9 @@ body {
 .coords{
     width:90px
 }
+
+.leaflet-container.crosshair-cursor-enabled {
+    cursor: crosshair;
+    
+}
+

@@ -56,8 +56,6 @@ $(document).ready(function () {
             falkosm,
             esrisat,
             esritopo
-                    //,
-                    //yandex
         ]
     });
 
@@ -75,6 +73,8 @@ $(document).ready(function () {
     L.control.layers(baseMaps,
             overlays
     ).addTo(map);
+    L.DomUtil.addClass(map._container,'crosshair-cursor-enabled');
+    document.getElementById('map').style.color = 'black'
 
     L.control.scale({ position: 'bottomleft', imperial:false, maxWidth:200}).addTo(map);
     
