@@ -22,7 +22,7 @@
  * THE SOFTWARE.
  */
 
-$(document).ready(function () {
+function run () {
 
     var basestations = L.layerGroup();
     
@@ -79,4 +79,4 @@ $(document).ready(function () {
     L.control.scale({ position: 'bottomleft', imperial:false, maxWidth:200}).addTo(map);
     
     L.control.mouseCoordinate().addTo(map);
-});
+};
