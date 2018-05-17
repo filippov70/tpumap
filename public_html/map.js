@@ -35,7 +35,7 @@ function run () {
     L.marker([54.721331, 20.495379], {icon: myIcon}).bindPopup('БС').addTo(basestations);
 
     var zrp = L.tileLayer('http://109.202.24.24/ZRPBS/{z}/{x}/{y}.png', {
-		maxZoom: 13 }).addTo(basestations);
+		maxZoom: 13 });
 
     
 
@@ -53,14 +53,13 @@ function run () {
     var map = new L.Map('map', {
         layers: [
             osm,
-            falkosm,
-            esrisat,
-            esritopo
+            zrp, 
+            basestations
         ]
     });
 
 
-    map.setView([54.721331, 20.495379], 13);
+    map.setView([54.721331, 20.495379], 11);
 
     var baseMaps = {
         "OpenTopoMap": osm,
@@ -71,10 +70,14 @@ function run () {
 
 
     L.control.layers(baseMaps,
-            overlays
+            overlays, 
+            {collapsed: false}
     ).addTo(map);
     L.DomUtil.addClass(map._container,'crosshair-cursor-enabled');
-    document.getElementById('map').style.color = 'black'
+    document.getElementById('map').style.color = 'black';
+    map.attributionControl._attributions = {};
+    map.attributionControl.addAttribution('<a href="http://yandex.ru" title="Yandex">Yandex</a>');
+    
 
     L.control.scale({ position: 'bottomleft', imperial:false, maxWidth:200}).addTo(map);
     

@@ -51,12 +51,13 @@ L.Control.mouseCoordinate  = L.Control.extend({
             //Round for display only
             var dLat = Math.round(lat * 100000) / 100000;
             var dLng = Math.round(lng * 100000) / 100000;
-            content += "<tr><td></td><td>" + dLat + "</td><td> " + dLng +"</td></tr>";
+            var toDeg = this._geo2grad(gps);
+            content += "<tr><td></td><td>" + toDeg.NS + dLat + "</td><td> "+ toDeg.WE + dLng +"</td></tr>";
             if(this.options.gpsLong){
                 //var gpsMinuten = this._geo2geodeziminuten(gps);
                 //content += "<tr><td></td><td class='coords'>"+ gpsMinuten.NS + " " + gpsMinuten.latgrad + "&deg; "+ gpsMinuten.latminuten+"</td><td class='coords'> " + gpsMinuten.WE + " "+ gpsMinuten.lnggrad +"&deg; "+ gpsMinuten.lngminuten +"</td></tr>";
                 var gpsMinutenSekunden = this._geo2gradminutensekunden(gps);
-                content += "<tr><td></td><td>"+ gpsMinutenSekunden.NS + " " + gpsMinutenSekunden.latgrad + "&deg; "+ gpsMinutenSekunden.latminuten + "&prime; "+ gpsMinutenSekunden.latsekunden+"&Prime;</td><td> " + gpsMinutenSekunden.WE + " "+ gpsMinutenSekunden.lnggrad +"&deg; "+ gpsMinutenSekunden.lngminuten + "&prime; "+ gpsMinutenSekunden.lngsekunden+"&Prime;</td></tr>";
+                content += "<tr><td></td><td>"+ gpsMinutenSekunden.NS + "" + gpsMinutenSekunden.latgrad + "&deg;"+ gpsMinutenSekunden.latminuten + "&prime;"+ gpsMinutenSekunden.latsekunden+"&Prime;</td><td> " + gpsMinutenSekunden.WE + " "+ gpsMinutenSekunden.lnggrad +"&deg; "+ gpsMinutenSekunden.lngminuten + "&prime; "+ gpsMinutenSekunden.lngsekunden+"&Prime;</td></tr>";
             }
         }
         if(this.options.utm){
@@ -85,7 +86,14 @@ L.Control.mouseCoordinate  = L.Control.extend({
     },    
 
 
-
+    _geo2grad: /**
+     * Comment
+     */
+        function (gps) {
+            var latgrad = parseInt(gps.lat,10);
+            var lnggrad = parseInt(gps.lng,10);
+            return this._AddNSEW({latgrad: latgrad, lnggrad: lnggrad});
+        },
     _geo2geodeziminuten: function (gps){
         var latgrad = parseInt(gps.lat,10);
         var latminuten = Math.round( ((gps.lat - latgrad) * 60) * 10000 ) / 10000;
@@ -109,15 +117,15 @@ L.Control.mouseCoordinate  = L.Control.extend({
         return this._AddNSEW({latgrad: latgrad, latminuten: latminuten,latsekunden: latsekunden, lnggrad: lnggrad, lngminuten: lngminuten, lngsekunden: lngsekunden});
     },
     _AddNSEW: function (coord){
-        coord.NS = "C";
-        coord.WE = "В";
+        coord.NS = "N";
+        coord.WE = "E";
         if(coord.latgrad < 0){
             coord.latgrad = coord.latgrad * (-1);
-            coord.NS = "Ю";
+            coord.NS = "S";
         }
         if(coord.lnggrad < 0){
             coord.lnggrad = coord.lnggrad * (-1);
-            coord.WE = "З";
+            coord.WE = "W";
         }
         return coord;
     }
