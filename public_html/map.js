@@ -82,4 +82,10 @@ function run () {
     L.control.scale({ position: 'bottomleft', imperial:false, maxWidth:200}).addTo(map);
     
     L.control.mouseCoordinate().addTo(map);
+    
+    // Legend 
+    var legend = L.control.LegendContainer()
+              .setContent("<p>Hello World in HTML!</p></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br><p>Fuck Off</p>")
+              //.close()
+              .addTo(map);
 };
