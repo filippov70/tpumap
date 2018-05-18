@@ -28,7 +28,7 @@ L.Control.LegendContainer = L.Control.extend({
     size: [ 300, 300 ],
     minSize: [ 350, 350 ],
     maxSize: [ 350, 500 ],
-    anchor: [ 130, 7 ],
+    anchor: [ 170, 7 ],
     position: 'topleft',
     initOpen: true
   },

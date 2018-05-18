@@ -83,9 +83,28 @@ function run () {
     
     L.control.mouseCoordinate().addTo(map);
     
+    
     // Legend 
+    // formatted text
+    var color1 = '<span class="fa fa-stop fa-fw"; style="color: red"></span> Текст для иконки</br></br>';
+    var color2 = '<span class="fa fa-stop fa-fw"; style="color: green"></span> Текст для иконки</br></br>';
+    var color3 = '<span class="fa fa-stop fa-fw"; style="color: blue"></span> Текст для иконки</br></br>';
+    
     var legend = L.control.LegendContainer()
-              .setContent("<p>Hello World in HTML!</p></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br><p>Fuck Off</p>")
+              .setContent("<h2>Заголовок легенды</h2><p>Строка 1</p><p>Строка 2</p><p>Строка 3</p><p>Строка 4</p><p>Строка 5</p>"+color1+color2+color3)
               //.close()
               .addTo(map);
+      
+    var legControl = L.control({position: 'topleft'});
+    legControl.onAdd = function (map) {
+        var div = L.DomUtil.create('div', 'leaflet-control-locate leaflet-bar leaflet-control');
+        var link = L.DomUtil.create('a', 'leaflet-bar-part leaflet-bar-part-single', div);
+        link.title = 'Легенда';
+        var icon = L.DomUtil.create('span', 'fa fa-map', link);
+        link.onclick = function () {
+            legend.open();
+        };
+        return div;
+    };
+    legControl.addTo(map);  
 };
