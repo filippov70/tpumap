@@ -46,18 +46,18 @@ L.Control.mouseCoordinate  = L.Control.extend({
         lng -= 180;
 
         var gps = {lat: lat,lng: lng};
-        var content = "<table>";
+        var content = "<table style='table-layout:fixed;'>";
         if(this.options.gps){
             //Round for display only
             var dLat = Math.round(lat * 100000) / 100000;
             var dLng = Math.round(lng * 100000) / 100000;
             var toDeg = this._geo2grad(gps);
-            content += "<tr><td></td><td>" + toDeg.NS + dLat + "</td><td> "+ toDeg.WE + dLng +"</td></tr>";
+            content += "<tr><td align='left'>" + toDeg.NS + " " + Math.abs(dLat) + "</td><td align='left'> "+ toDeg.WE + " " + Math.abs(dLng) +"</td></tr>";
             if(this.options.gpsLong){
                 //var gpsMinuten = this._geo2geodeziminuten(gps);
                 //content += "<tr><td></td><td class='coords'>"+ gpsMinuten.NS + " " + gpsMinuten.latgrad + "&deg; "+ gpsMinuten.latminuten+"</td><td class='coords'> " + gpsMinuten.WE + " "+ gpsMinuten.lnggrad +"&deg; "+ gpsMinuten.lngminuten +"</td></tr>";
                 var gpsMinutenSekunden = this._geo2gradminutensekunden(gps);
-                content += "<tr><td></td><td>"+ gpsMinutenSekunden.NS + "" + gpsMinutenSekunden.latgrad + "&deg;"+ gpsMinutenSekunden.latminuten + "&prime;"+ gpsMinutenSekunden.latsekunden+"&Prime;</td><td> " + gpsMinutenSekunden.WE + " "+ gpsMinutenSekunden.lnggrad +"&deg; "+ gpsMinutenSekunden.lngminuten + "&prime; "+ gpsMinutenSekunden.lngsekunden+"&Prime;</td></tr>";
+                content += "<tr><td>"+ gpsMinutenSekunden.NS + " " + gpsMinutenSekunden.latgrad + "&deg;"+ gpsMinutenSekunden.latminuten + "&prime;"+ gpsMinutenSekunden.latsekunden+"&Prime;</td><td> " + gpsMinutenSekunden.WE + " "+ gpsMinutenSekunden.lnggrad +"&deg; "+ gpsMinutenSekunden.lngminuten + "&prime; "+ gpsMinutenSekunden.lngsekunden+"&Prime;</td></tr>";
             }
         }
         if(this.options.utm){
@@ -65,20 +65,6 @@ L.Control.mouseCoordinate  = L.Control.extend({
             if(utm !== undefined){
                 content += "<tr><td>UTM</td><td colspan='2'>"+utm.zone+"&nbsp;" +utm.x+"&nbsp;" +utm.y+"</td></tr>";
             }
-        }
-        if(this.options.utmref){
-            var utmref = UTMREF.fromUTM(UTM.fromLatLng(gps));
-            if(utmref !== undefined){
-                content += "<tr><td>UTM REF</td><td colspan='2'>"+utmref.zone+"&nbsp;" +utmref.band+"&nbsp;" +utmref.x+"&nbsp;" +utmref.y+"</td></tr>";
-            }
-        }
-        if(this.options.qth){
-            var qth = QTH.fromLatLng(gps);
-            content += "<tr><td>QTH</td><td colspan='2'>"+qth+"</td></tr>";
-        }
-        if(this.options.nac){
-            var nac = NAC.fromLatLng(gps);
-            content += "<tr><td>NAC</td><td colspan='2'>"+nac.y+" "+ nac.x +"</td></tr>";
         }
             
         content += "</table>";
@@ -90,8 +76,8 @@ L.Control.mouseCoordinate  = L.Control.extend({
      * Comment
      */
         function (gps) {
-            var latgrad = parseInt(gps.lat,10);
-            var lnggrad = parseInt(gps.lng,10);
+            var latgrad = parseInt(gps.lat, 10);
+            var lnggrad = parseInt(gps.lng, 10);
             return this._AddNSEW({latgrad: latgrad, lnggrad: lnggrad});
         },
     _geo2geodeziminuten: function (gps){
@@ -106,13 +92,13 @@ L.Control.mouseCoordinate  = L.Control.extend({
     _geo2gradminutensekunden: function (gps){
         var latgrad = parseInt(gps.lat,10);
         var latminuten = (gps.lat - latgrad) * 60;
-        var latsekunden = Math.round(((latminuten - parseInt(latminuten,10)) * 60) * 100) / 100;
-        latminuten = parseInt(latminuten,10);
+        var latsekunden = Math.abs(Math.round(((latminuten - parseInt(latminuten,10)) * 60) * 100) / 100);
+        latminuten = Math.abs(parseInt(latminuten,10));
 
         var lnggrad = parseInt(gps.lng,10);
         var lngminuten = (gps.lng - lnggrad) * 60;
-        var lngsekunden = Math.round(((lngminuten - parseInt(lngminuten,10)) * 60) * 100) /100;
-        lngminuten = parseInt(lngminuten,10);
+        var lngsekunden = Math.abs(Math.round(((lngminuten - parseInt(lngminuten,10)) * 60) * 100) /100);
+        lngminuten = Math.abs(parseInt(lngminuten,10));
         
         return this._AddNSEW({latgrad: latgrad, latminuten: latminuten,latsekunden: latsekunden, lnggrad: lnggrad, lngminuten: lngminuten, lngsekunden: lngsekunden});
     },
