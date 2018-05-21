@@ -61,14 +61,14 @@ body {
 }
 
 .leaflet-control-mouseCoordinate{
-    width:220px;
+    width:160px;
     min-height:30px;
     text-align:left;
     table-layout:fixed;
     border-radius:5px;
     overflow:hidden;
     box-shadow:0 1px 5px rgba(0,0,0,.6);
-    background: #ccc;
+    background:  #fff;
     color:#333;padding:6px 10px 6px 6px
 }
 .leaflet-control-mouseCoordinate table{
